@@ -1,0 +1,30 @@
+## Notas Explicativas
+
+A solução foi desenvolvida utilizando **JavaScript (Node.js)**, pois é a linguagem com a qual tenho maior familiaridade e experiência para trabalhar com manipulação de dados e integração com APIs.
+
+Para realizar o cadastro inicial na plataforma, utilizei o **Git Bash** executando o comando `curl` fornecido no enunciado, que realiza uma requisição HTTP para a API de autenticação do Supabase.
+
+Para leitura e escrita de arquivos CSV utilizei as bibliotecas:
+
+* `csv-parser` → responsável pela leitura e parsing do arquivo `input.csv`
+* `csv-writer` → responsável pela geração do arquivo `resultado.csv`
+
+Essas bibliotecas facilitam a manipulação de dados tabulares em Node.js.
+
+Para validar os municípios informados no arquivo de entrada utilizei a **API de Localidades do IBGE**, que disponibiliza uma lista oficial de municípios brasileiros. O script realiza uma requisição para baixar todos os municípios disponíveis e constrói um **mapa em memória** contendo os dados relevantes (nome, UF, região e ID do município).
+
+Com essa base carregada, cada município do arquivo de entrada é comparado com os nomes oficiais utilizando um algoritmo de **similaridade de strings baseado na distância de Levenshtein**. Essa técnica permite identificar diferenças pequenas de digitação.
+
+Foi adotado um limiar de **80% de similaridade** para considerar que um município corresponde ao registro oficial do IBGE. Isso permite corrigir automaticamente erros simples de digitação presentes no arquivo de entrada.
+
+Após a identificação do município correspondente, o script gera o arquivo `resultado.csv` contendo:
+
+* município informado na entrada
+* população informada
+* município oficial do IBGE
+* UF
+* região
+* ID do município no IBGE
+* status do processamento
+
+Além da geração do CSV, o programa também calcula estatísticas sobre o processamento dos municípios e envia esses dados para uma **Edge Function no Supabase** utilizando uma requisição HTTP autenticada com `axios`.
