@@ -1,0 +1,10 @@
+Requisitos:
+Node.js 18 ou superior
+npm
+
+Instalar dependências:
+npm install axios csv-parser csv-writer
+
+Executar o script:
+node index.js
+
